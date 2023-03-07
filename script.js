@@ -2,9 +2,6 @@ const button = document.getElementById("button-convert")
 const selectConvertTo = document.getElementById("select-convert-to")
 const selectConvertFrom = document.getElementById("select-convert-from")
 
-const dolar = 5.25
-const euro = 5.64
-
 hideOptions = () => {
     if (selectConvertFrom.value === "R$ Real Brasileiro") {
 
@@ -17,14 +14,14 @@ hideOptions = () => {
         document.getElementsByName("input-currency")[0].placeholder = 'R$ 10.000,00'
 
         function k(i) {
-            var v = i.value.replace(/\D/g,'');
-            v = (v/100).toFixed(2) + '';
+            var v = i.value.replace(/\D/g, '');
+            v = (v / 100).toFixed(2) + '';
             v = v.replace(".", ",");
             v = v.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             i.value = v;
         }
 
-        
+
     } else if (selectConvertFrom.value === "US$ Dólar Americano") {
 
         document.getElementById("option-dolar").style.display = "none";
@@ -72,10 +69,18 @@ hideOptions = () => {
     }
 }
 
-convertValues = () => {
+convertValues = async () => {
     const inputCurrency = document.getElementById("input-currency").value
     const valueToConvert = document.getElementById("value-to-convert")
     const convertedCurrency = document.getElementById("converted-value")
+
+    const data = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL").then(response => response.json())
+    console.log(data)
+
+    const dolar = data.USDBRL.high
+    const euro = data.EURBRL.high
+
+    console.log(data)
 
     if (selectConvertFrom.value === "R$ Real Brasileiro" && selectConvertTo.value === "US$ Dólar Americano") {
         convertedCurrency.innerHTML = new Intl.NumberFormat("en-US", {
